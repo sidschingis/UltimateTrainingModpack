@@ -180,9 +180,9 @@ pub unsafe fn get_command_flag_cat(
 
     // Check against figher status
     let status_kind = StatusModule::status_kind(module_accessor) as i32;
-    let is_correctStatus = !(*FIGHTER_STATUS_KIND_CATCH..=*FIGHTER_STATUS_KIND_TREAD_FALL).contains(&status_kind);
+    let is_correct_status = !(*FIGHTER_STATUS_KIND_CATCH..=*FIGHTER_STATUS_KIND_TREAD_FALL).contains(&status_kind);
 
-    if !is_correctStatus {
+    if !is_correct_status {
         return;
     }
 
