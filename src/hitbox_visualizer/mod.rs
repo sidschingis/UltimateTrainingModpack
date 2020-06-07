@@ -162,7 +162,6 @@ pub unsafe fn get_command_flag_cat(
         return;
     }
 
-    //
     /**
      * Apply only once per frame
      * get_command_flag_cat is called once per frame per category, so
