@@ -46,11 +46,14 @@ pub unsafe fn get_command_flag_cat(
         return;
     }
 
-    if !is_operation_cpu(module_accessor) {
+    // Only do once per frame
+    if category != FIGHTER_PAD_COMMAND_CATEGORY1 {
         return;
     }
 
-    if category != FIGHTER_PAD_COMMAND_CATEGORY1 {
+    check_mash_toggle(module_accessor);
+
+    if !is_operation_cpu(module_accessor) {
         return;
     }
 
@@ -58,6 +61,7 @@ pub unsafe fn get_command_flag_cat(
     || is_in_landing(module_accessor)
     || is_in_shieldstun(module_accessor)
     || is_in_footstool(module_accessor)
+    || BUFFERED_OPTION != Mash::None
     || StatusModule::status_kind(module_accessor) == FIGHTER_STATUS_KIND_CLIFF_ROBBED){
         return;
     }
@@ -146,6 +150,30 @@ pub unsafe fn get_command_flag_cat(
         }
         _ => (),
     }
+}
+
+unsafe fn check_mash_toggle(
+    module_accessor: &mut app::BattleObjectModuleAccessor,
+){
+    // Grab + Dpad left -> start mashing
+    if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CATCH)
+    && ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_L)
+    {
+        buffer_option(MENU.mash_state);
+        println!("[Training Modpack] Now Mashing {}", MENU.mash_state as u32);
+        set_neutral_mash(true);
+        return;
+    }
+
+     // Grab + Dpad right -> stop mashing
+     if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CATCH)
+     && ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_R)
+     {
+        println!("[Training Modpack] Stop Mashing");
+        buffer_option(Mash::None);
+        set_neutral_mash(false);
+        return;
+     }
 }
 
 pub unsafe fn check_button_on(
