@@ -227,45 +227,63 @@ unsafe fn handle_escape_mash(fighter: &mut L2CFighterCommon)
 }
 
 unsafe fn handle_attack_mash(module_accessor: &mut app::BattleObjectModuleAccessor,fighter: &mut L2CFighterCommon){
-    if MENU.mash_attack_state == Attack::Grab {
-        if WorkModule::get_int(
-            module_accessor,
-            *FIGHTER_INSTANCE_WORK_ID_INT_INVALID_CATCH_FRAME,
-        ) == 0
-        {
-            if WorkModule::is_enable_transition_term(
+
+    match MENU.mash_attack_state {
+        Attack::Grab => {
+            //
+            if WorkModule::get_int(
+                module_accessor,
+                *FIGHTER_INSTANCE_WORK_ID_INT_INVALID_CATCH_FRAME,
+            ) != 0
+            {
+                return;
+            }
+
+            // Check Transition, shield uses it's own check because of the additional 4f window
+            let can_transition = WorkModule::is_enable_transition_term(
                 module_accessor,
                 *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH,
-            ) {
-                fighter.fighter_base.change_status(
-                    L2CValue::new_int(*FIGHTER_STATUS_KIND_CATCH as u64),
-                    L2CValue::new_bool(true),
-                );
+            );
+            if !can_transition {
+                return;
             }
-        }
-    }
-    else if MENU.mash_attack_state == Attack::UpB {
-        if WorkModule::is_enable_transition_term(
-            module_accessor,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON,
-        ) {
+
+            fighter.fighter_base.change_status(
+                L2CValue::new_int(*FIGHTER_STATUS_KIND_CATCH as u64),
+                L2CValue::new_bool(true),
+            );
+        },
+        Attack::UpB => {
+            // Check Transition
+            if !can_jump(module_accessor) {
+                return;
+            }
+
             fighter.fighter_base.change_status(
                 L2CValue::new_int(*FIGHTER_STATUS_KIND_SPECIAL_HI as u64),
                 L2CValue::new_bool(false),
             );
-        }
-    }
-    else if MENU.mash_attack_state == Attack::UpSmash {
-        if WorkModule::is_enable_transition_term(
-            module_accessor,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON,
-        ) {
+        },
+        Attack::UpSmash => {
+            // Check Transition
+            if !can_jump(module_accessor) {
+                return;
+            }
+
             fighter.fighter_base.change_status(
                 L2CValue::new_int(*FIGHTER_STATUS_KIND_ATTACK_HI4_START as u64),
                 L2CValue::new_bool(false),
             );
-        }
+        },
+        _=> {},
     }
+}
+
+unsafe fn can_jump(module_accessor: &mut app::BattleObjectModuleAccessor) -> bool {
+    WorkModule::is_enable_transition_term(
+        module_accessor,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON,
+    )
 }
 
 pub unsafe fn check_button_on(
