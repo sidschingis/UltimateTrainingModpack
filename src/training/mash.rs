@@ -1,9 +1,21 @@
 use crate::common::consts::*;
 use crate::common::*;
-use crate::training::shield;
 use smash::app::{self, lua_bind::*};
 use smash::hash40;
 use smash::lib::lua_const::*;
+
+static mut BUFFERED_OPTION: Mash = Mash::None;
+static mut MASH_IN_NEUTRAL: bool = false;
+
+pub unsafe fn buffer_option(option: Mash)
+{
+    BUFFERED_OPTION = option;
+}
+
+pub unsafe fn set_neutral_mash(value: bool)
+{
+    MASH_IN_NEUTRAL = value;
+}
 
 pub unsafe fn get_attack_air_kind(
     module_accessor: &mut app::BattleObjectModuleAccessor,
@@ -50,11 +62,19 @@ pub unsafe fn get_command_flag_cat(
         return;
     }
 
-    if is_in_shieldstun(module_accessor) && !shield::allow_oos(){
-        return;
+    // Prefer buffered option over default
+    let mut option = BUFFERED_OPTION;
+    if option == Mash::None
+    {
+        option = MENU.mash_state
     }
 
-    match MENU.mash_state {
+    // Reset buffer unless full mash flag
+    if !MASH_IN_NEUTRAL {
+        BUFFERED_OPTION = Mash::None;
+    }
+
+    match option {
         Mash::Airdodge => {
             *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE;
         }
