@@ -73,23 +73,7 @@ pub unsafe fn get_command_flag_cat(
             *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_ESCAPE_B;
         }
         Mash::Attack => {
-            use Attack::*;
-
-            match MENU.mash_attack_state {
-                Nair | Fair | Bair | UpAir | Dair => {
-                    *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N;
-                    // If we are performing the attack OOS we also need to jump
-                    if is_in_shieldstun(module_accessor) {
-                        *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON;
-                    }
-                }
-                NeutralB => *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N,
-                SideB => *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S,
-                UpB => *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI,
-                DownB => *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW,
-                UpSmash => *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4,
-                Grab => *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH,
-            }
+            perform_attack(module_accessor,flag, MENU.mash_attack_state);
         }
         Mash::Random => {
             if is_airborne(module_accessor) {
@@ -142,10 +126,6 @@ pub unsafe fn get_command_flag_cat(
         }
         _ => (),
     }
-}
-
-pub unsafe fn performAttack(){
-
 }
 
 pub unsafe fn check_button_on(

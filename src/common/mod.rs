@@ -124,3 +124,27 @@ pub unsafe fn perform_defensive_option(
         _ => (),
     }
 }
+
+pub unsafe fn perform_attack(
+    module_accessor: &mut app::BattleObjectModuleAccessor,
+    flag: &mut i32,
+    attack: Attack,
+) {
+    match attack {
+        Attack::Nair | Attack::Fair | Attack::Bair | Attack::UpAir | Attack::Dair =>{
+            // Nair will be replaced by the correct attack through get_attack_air_kind
+            *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N;
+            // If we are grounded we also need to jump
+            if is_grounded(module_accessor) {
+                *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON;
+            }
+        }
+
+        Attack::NeutralB => *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N,
+        Attack::SideB => *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S,
+        Attack::UpB => *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI,
+        Attack::DownB => *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW,
+        Attack::UpSmash => *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4,
+        Attack::Grab => *flag |= *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH,
+    }
+}
