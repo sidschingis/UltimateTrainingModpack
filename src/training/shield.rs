@@ -183,7 +183,7 @@ pub unsafe fn handle_sub_guard_cont(fighter: &mut L2CFighterCommon) -> L2CValue 
         module_accessor,
         *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE,
     ) {
-        handle_escape_mash(module_accessor, fighter);
+        handle_escape_mash(fighter);
     }
 
     // Offensive
@@ -199,7 +199,7 @@ pub unsafe fn allow_oos()->bool {
     MULTI_HIT_OFFSET == 0
 }
 
-unsafe fn handle_escape_mash(module_accessor: &mut app::BattleObjectModuleAccessor,fighter: &mut L2CFighterCommon)
+unsafe fn handle_escape_mash(fighter: &mut L2CFighterCommon)
 {
     if MENU.mash_state == Mash::Spotdodge {
         fighter.fighter_base.change_status(
