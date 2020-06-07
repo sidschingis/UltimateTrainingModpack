@@ -27,7 +27,6 @@ unsafe fn get_shield_flag() ->bool {
 
 unsafe fn reset_multi_hit_offset(){
     MULTI_HIT_OFFSET = MENU.oos_offset + 1; // Menu starts with 0
-    println!("[Training Modpack] Reset oos offset to {}", MENU.oos_offset);
 }
 
 pub unsafe fn get_command_flag_cat(module_accessor: &mut app::BattleObjectModuleAccessor) {
