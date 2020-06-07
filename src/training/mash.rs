@@ -92,9 +92,7 @@ pub unsafe fn get_command_flag_cat(
             }
         }
         Mash::Random => {
-            let situation_kind = StatusModule::situation_kind(module_accessor) as i32;
-
-            if situation_kind == SITUATION_KIND_AIR {
+            if is_airborne(module_accessor) {
                 let random_commands = vec![
                     *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE,
                     *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON,
@@ -115,7 +113,7 @@ pub unsafe fn get_command_flag_cat(
                         as usize;
 
                 *flag |= random_commands[random_cmd_index];
-            } else if situation_kind == SITUATION_KIND_GROUND {
+            } else if is_grounded(module_accessor) {
                 let random_commands = vec![
                     *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON,
                     *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N,
@@ -144,6 +142,10 @@ pub unsafe fn get_command_flag_cat(
         }
         _ => (),
     }
+}
+
+pub unsafe fn performAttack(){
+
 }
 
 pub unsafe fn check_button_on(

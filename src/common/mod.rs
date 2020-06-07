@@ -33,7 +33,6 @@ extern "C" {
 pub fn get_category(module_accessor: &mut app::BattleObjectModuleAccessor) -> i32 {
     return (module_accessor.info >> 28) as u8 as i32;
 }
-
 pub unsafe fn is_fighter(module_accessor: &mut app::BattleObjectModuleAccessor) -> bool {
     get_category(module_accessor) == BATTLE_OBJECT_CATEGORY_FIGHTER
 }
@@ -52,6 +51,15 @@ pub unsafe fn is_operation_cpu(module_accessor: &mut app::BattleObjectModuleAcce
     FighterInformation::is_operation_cpu(fighter_information)
 }
 
+pub unsafe fn is_grounded(module_accessor: &mut app::BattleObjectModuleAccessor) ->bool{
+    let situation_kind = StatusModule::situation_kind(module_accessor) as i32;
+    situation_kind == SITUATION_KIND_GROUND
+}
+
+pub unsafe fn is_airborne(module_accessor: &mut app::BattleObjectModuleAccessor) ->bool{
+    let situation_kind = StatusModule::situation_kind(module_accessor) as i32;
+    situation_kind == SITUATION_KIND_AIR
+}
 
 pub unsafe fn is_neutral_pos(module_accessor: &mut app::BattleObjectModuleAccessor) -> bool {
     let status_kind = StatusModule::status_kind(module_accessor);

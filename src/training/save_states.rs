@@ -85,7 +85,7 @@ pub unsafe fn save_states(module_accessor: &mut app::BattleObjectModuleAccessor)
         PostureModule::set_pos(module_accessor, &pos);
 
         // force aerial, because from aerial state we can move anywhere
-        if StatusModule::situation_kind(module_accessor) == SITUATION_KIND_GROUND {
+        if is_grounded(module_accessor) {
             StatusModule::change_status_request(module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, false);
         }
         return;
@@ -93,7 +93,7 @@ pub unsafe fn save_states(module_accessor: &mut app::BattleObjectModuleAccessor)
 
     // move to correct pos
     if *save_state == PosMove {
-        if StatusModule::situation_kind(module_accessor) == SITUATION_KIND_GROUND {
+        if !is_grounded(module_accessor) {
             return;
         }
 
