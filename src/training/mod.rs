@@ -57,6 +57,7 @@ pub unsafe fn handle_get_command_flag_cat(
     // int ret = InputRecorder::get_command_flag_cat(module_accessor, category, flag, replace);
     // if (replace) return ret;
 
+    shield::get_command_flag_cat(module_accessor);
     mash::get_command_flag_cat(module_accessor, category, &mut flag);
     ledge::get_command_flag_cat(module_accessor, category, &mut flag);
     tech::get_command_flag_cat(module_accessor, category, &mut flag);
@@ -155,23 +156,21 @@ pub fn training_mods() {
     unsafe {
         LookupSymbol(
             &mut FIGHTER_MANAGER_ADDR,
-            "_ZN3lib9SingletonIN3app14FighterManagerEE9instance_E\u{0}".as_bytes().as_ptr(),
+            "_ZN3lib9SingletonIN3app14FighterManagerEE9instance_E\u{0}"
+                .as_bytes()
+                .as_ptr(),
         );
     }
 
     skyline::install_hooks!(
         // Mash airdodge/jump
         handle_get_command_flag_cat,
-
         // Hold/Infinite shield
         handle_check_button_on,
         handle_check_button_off,
-
         handle_get_param_float,
-
         // Mash attack
         handle_get_attack_air_kind,
-
         // Tech options
         handle_change_motion,
     );

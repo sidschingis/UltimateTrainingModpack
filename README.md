@@ -1,6 +1,9 @@
 # Ultimate Training Modpack Plugin
 
-[![Github all releases](https://img.shields.io/github/downloads/jugeeya/UltimateTrainingModpack/total.svg)](https://GitHub.com/jugeeya/UltimateTrainingModpack/releases/)
+[![GitHub All Releases](https://img.shields.io/github/downloads/jugeeya/UltimateTrainingModpack/total?logo=download&style=for-the-badge)](https://github.com/jugeeya/UltimateTrainingModpack/releases)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/jugeeya/UltimateTrainingModpack/Rust?style=for-the-badge)](https://github.com/jugeeya/UltimateTrainingModpack/actions)
+[![Discord](https://img.shields.io/discord/407970595418931200?label=discord&logo=discord&style=for-the-badge)](https://discord.gg/qU4TBwV)
+[![Twitter Follow](https://img.shields.io/twitter/follow/jugeeya?color=brightgreen&logo=twitter&style=for-the-badge)](https://twitter.com/jugeeya)
 
 A [Skyline](https://github.com/shadowninja108/Skyline) plugin using [cargo-skyline](https://github.com/jam1garner/cargo-skyline) for adding features to the training mode. It interfaces with a [Tesla](https://github.com/WerWolv/libtesla), a Switch custom overlay, for use as a menu to the features offered in training mode.
 
@@ -13,6 +16,8 @@ Built releases can be found [here](https://github.com/jugeeya/UltimateTrainingMo
 
 # Features
 The features in this modpack are configured through the Tesla menu, which can be accessed at any time with by pressing `L+X+DPad Left`. This button configuration is fully configurable in the file `/config/tesla/config.ini`.
+[<img src="https://i.imgur.com/ZjbGRwy.jpg">](https://i.imgur.com/ZjbGRwy.jpg)
+[<img src="https://pbs.twimg.com/media/EZCN6c_UEAEViHA?format=jpg&name=large">](https://pbs.twimg.com/media/EZCN6c_UEAEViHA?format=jpg&name=large)
 
 #### Save States
 At any time in Training Mode, you can press `Grab + Down Taunt` to save the state of training mode. This will save the position, state, and damage of each fighter, which can then be reverted to at any time with `Grab + Up Taunt`. Use this instead of the built-in training mode reset!
@@ -70,7 +75,7 @@ Specific options include:
 CPUs will hold a shield that does not deteriorate over time until hit.
 
 ###### Hold
-CPUs will hold a normal shield.
+CPUs will hold a shield that does not deteriorate over time until hit for the first time.
 
 #### Force CPU DI
 ##### All DI Toggles

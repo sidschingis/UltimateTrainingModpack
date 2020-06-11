@@ -3,8 +3,8 @@ pub mod frame_counter;
 
 use crate::common::consts::*;
 use smash::app::{self, lua_bind::*};
-use smash::lib::lua_const::*;
 use smash::hash40;
+use smash::lib::lua_const::*;
 
 pub static mut MENU_STRUCT: consts::TrainingModpackMenu = consts::TrainingModpackMenu {
     hitbox_vis: true,
@@ -15,7 +15,7 @@ pub static mut MENU_STRUCT: consts::TrainingModpackMenu = consts::TrainingModpac
     mash_state: Mash::None,
     shield_state: Shield::None,
     defensive_state: Defensive::Random,
-    oos_offset: 1,
+    oos_offset: 0,
 };
 
 pub static MENU: &'static mut consts::TrainingModpackMenu = unsafe { &mut MENU_STRUCT };
@@ -26,8 +26,8 @@ extern "C" {
     #[link_name = "\u{1}_ZN3app9smashball16is_training_modeEv"]
     pub fn is_training_mode() -> bool;
 
-    //#[link_name = "\u{1}_ZN3app7utility8get_kindEPKNS_26BattleObjectModuleAccessorE"]
-    //pub fn get_kind(module_accessor: &mut app::BattleObjectModuleAccessor) -> i32;
+//#[link_name = "\u{1}_ZN3app7utility8get_kindEPKNS_26BattleObjectModuleAccessorE"]
+//pub fn get_kind(module_accessor: &mut app::BattleObjectModuleAccessor) -> i32;
 }
 
 pub fn get_category(module_accessor: &mut app::BattleObjectModuleAccessor) -> i32 {
@@ -46,22 +46,13 @@ pub unsafe fn is_operation_cpu(module_accessor: &mut app::BattleObjectModuleAcce
         WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as i32;
     let entry_id = app::FighterEntryID(entry_id_int);
     let mgr = *(FIGHTER_MANAGER_ADDR as *mut *mut app::FighterManager);
-    let fighter_information = FighterManager::get_fighter_information( mgr, entry_id) as *mut app::FighterInformation;
+    let fighter_information =
+        FighterManager::get_fighter_information(mgr, entry_id) as *mut app::FighterInformation;
 
     FighterInformation::is_operation_cpu(fighter_information)
 }
 
-pub unsafe fn is_grounded(module_accessor: &mut app::BattleObjectModuleAccessor) ->bool{
-    let situation_kind = StatusModule::situation_kind(module_accessor) as i32;
-    situation_kind == SITUATION_KIND_GROUND
-}
-
-pub unsafe fn is_airborne(module_accessor: &mut app::BattleObjectModuleAccessor) ->bool{
-    let situation_kind = StatusModule::situation_kind(module_accessor) as i32;
-    situation_kind == SITUATION_KIND_AIR
-}
-
-pub unsafe fn is_neutral_pos(module_accessor: &mut app::BattleObjectModuleAccessor) -> bool {
+pub unsafe fn is_idle(module_accessor: &mut app::BattleObjectModuleAccessor) -> bool {
     let status_kind = StatusModule::status_kind(module_accessor);
     status_kind == FIGHTER_STATUS_KIND_WAIT
 }
@@ -87,7 +78,8 @@ pub unsafe fn is_in_shieldstun(module_accessor: &mut app::BattleObjectModuleAcce
 
 pub unsafe fn is_in_landing(module_accessor: &mut app::BattleObjectModuleAccessor) -> bool {
     let status_kind = StatusModule::status_kind(module_accessor);
-    (*FIGHTER_STATUS_KIND_LANDING..=*FIGHTER_STATUS_KIND_LANDING_DAMAGE_LIGHT).contains(&status_kind)
+    (*FIGHTER_STATUS_KIND_LANDING..=*FIGHTER_STATUS_KIND_LANDING_DAMAGE_LIGHT)
+        .contains(&status_kind)
 }
 
 pub unsafe fn is_in_footstool(module_accessor: &mut app::BattleObjectModuleAccessor) -> bool {

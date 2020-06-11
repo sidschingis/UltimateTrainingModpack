@@ -1,7 +1,7 @@
 use crate::common::*;
 use smash::app::{self, lua_bind::*};
 use smash::lib::lua_const::*;
-use smash::phx::{Vector3f, Hash40};
+use smash::phx::{Hash40, Vector3f};
 
 #[derive(PartialEq)]
 enum SaveState {
@@ -29,19 +29,17 @@ static mut SAVE_STATE_LR_CPU: f32 = 1.0;
 static mut SAVE_STATE_SITUATION_KIND_CPU: i32 = 0 as i32;
 
 pub unsafe fn save_states(module_accessor: &mut app::BattleObjectModuleAccessor) {
-    let status = StatusModule::status_kind(module_accessor) as i32;
-
-    if !is_training_mode(){
+    if !is_training_mode() {
         return;
     }
 
+    let status = StatusModule::status_kind(module_accessor) as i32;
     let save_state_x: *mut f32;
     let save_state_y: *mut f32;
     let save_state_percent: *mut f32;
     let save_state_lr: *mut f32;
     let save_state_situation_kind: *mut i32;
     let save_state: *mut SaveState;
-
     if is_operation_cpu(module_accessor) {
         save_state_x = &mut SAVE_STATE_X_CPU;
         save_state_y = &mut SAVE_STATE_Y_CPU;
@@ -73,8 +71,8 @@ pub unsafe fn save_states(module_accessor: &mut app::BattleObjectModuleAccessor)
     if *save_state == CameraMove {
         *save_state = PosMove;
 
-        let left_right =
-            (PostureModule::pos_x(module_accessor) > 0.0) as i32 as f32 - (PostureModule::pos_x(module_accessor) < 0.0) as i32 as f32;
+        let left_right = (PostureModule::pos_x(module_accessor) > 0.0) as i32 as f32
+            - (PostureModule::pos_x(module_accessor) < 0.0) as i32 as f32;
         let y_pos = 20.0;
 
         let pos = Vector3f {
@@ -85,15 +83,19 @@ pub unsafe fn save_states(module_accessor: &mut app::BattleObjectModuleAccessor)
         PostureModule::set_pos(module_accessor, &pos);
 
         // force aerial, because from aerial state we can move anywhere
-        if is_grounded(module_accessor) {
-            StatusModule::change_status_request(module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, false);
+        if StatusModule::situation_kind(module_accessor) == SITUATION_KIND_GROUND {
+            StatusModule::change_status_request(
+                module_accessor,
+                *FIGHTER_STATUS_KIND_JUMP_SQUAT,
+                false,
+            );
         }
         return;
     }
 
     // move to correct pos
     if *save_state == PosMove {
-        if !is_grounded(module_accessor) {
+        if StatusModule::situation_kind(module_accessor) == SITUATION_KIND_GROUND {
             return;
         }
 
@@ -121,25 +123,18 @@ pub unsafe fn save_states(module_accessor: &mut app::BattleObjectModuleAccessor)
             false,
         );
 
-        if *save_state_situation_kind == SITUATION_KIND_GROUND
-            && status != FIGHTER_STATUS_KIND_WAIT
+        if *save_state_situation_kind == SITUATION_KIND_GROUND && status != FIGHTER_STATUS_KIND_WAIT
         {
             StatusModule::change_status_request(
                 module_accessor,
                 *FIGHTER_STATUS_KIND_CLIFF_WAIT,
                 false,
             );
-        }
-        else if *save_state_situation_kind == SITUATION_KIND_AIR
+        } else if *save_state_situation_kind == SITUATION_KIND_AIR
             && status != FIGHTER_STATUS_KIND_FALL
         {
-            StatusModule::change_status_request(
-                module_accessor,
-                *FIGHTER_STATUS_KIND_FALL,
-                false,
-            );
-        }
-        else if *save_state_situation_kind == SITUATION_KIND_CLIFF
+            StatusModule::change_status_request(module_accessor, *FIGHTER_STATUS_KIND_FALL, false);
+        } else if *save_state_situation_kind == SITUATION_KIND_CLIFF
             && status != FIGHTER_STATUS_KIND_CLIFF_CATCH_MOVE
             && status != FIGHTER_STATUS_KIND_CLIFF_CATCH
         {

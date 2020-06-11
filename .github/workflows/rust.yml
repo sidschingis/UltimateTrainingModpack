@@ -25,8 +25,10 @@ jobs:
       run: cargo install --git https://github.com/jam1garner/cargo-skyline
     - name: Install rust-std-skyline-squashed
       run: cd .. && git clone https://github.com/jam1garner/rust-std-skyline-squashed && cd -
+    - name: Install xargo
+      run: cargo install xargo
     - name: Attempt to build
-      run: PATH=$PATH:/usr/share/rust/.rustup/toolchains/nightly-2020-04-10-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/bin cargo skyline build --release
+      run: XARGO_RUST_SRC=$(realpath ../rust-std-skyline-squashed/src) PATH=$PATH:/usr/share/rust/.rustup/toolchains/nightly-2020-04-10-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/bin cargo skyline build --release
     - name: Prepare zip
       run: | 
         mkdir -p atmosphere/contents/01006A800016E000/romfs/skyline/plugins/ 
@@ -34,12 +36,15 @@ jobs:
         mkdir -p switch/.overlays/
         cp TrainingModpackOverlay/ovlTrainingModpack.ovl switch/.overlays/ovlTrainingModpack.ovl
         zip -r training_modpack_beta.zip atmosphere switch 
-    - name: Upload Release
-      uses: majkrzak/create-release@latest
+    - name: Update Release
+      uses: meeDamian/github-release@2.0
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        prerelease: true
+        allow_override: true
+        gzip: false
+        tag: beta
         name: beta
-        code: beta
         body: >
           Beta built off of the latest code in the repository. 
           
@@ -48,9 +53,5 @@ jobs:
           - `atmosphere/contents/01006A800016E000/romfs/skyline/plugins/libtraining_modpack.nro` is the mod for the game itself
 
           - `switch/.overlays/ovlTrainingModpack.ovl` is the Tesla submenu
-        prerelease: true
-        recreate: true
-        assets: training_modpack_beta.zip:training_modpack_beta.zip:application/zip
-  
-
-
+        files: >
+          training_modpack_beta.zip

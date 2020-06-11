@@ -9,10 +9,10 @@ pub unsafe fn force_option(module_accessor: &mut app::BattleObjectModuleAccessor
         return;
     }
 
-    if !(WorkModule::is_enable_transition_term(
+    if !WorkModule::is_enable_transition_term(
         module_accessor,
         *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_CLIMB,
-    )) {
+    ) {
         return;
     }
 
@@ -68,9 +68,11 @@ pub unsafe fn defensive_option(
     let status = StatusModule::status_kind(module_accessor) as i32;
     let prev_status = StatusModule::prev_status_kind(module_accessor, 0) as i32;
 
-    if should_perform_defensive_option(module_accessor, prev_status, status) {
-        perform_defensive_option(module_accessor, flag);
+    if !should_perform_defensive_option(module_accessor, prev_status, status) {
+        return;
     }
+
+    perform_defensive_option(module_accessor, flag);
 }
 
 pub unsafe fn check_button_on(
@@ -89,17 +91,17 @@ pub unsafe fn check_button_on(
         return None;
     }
 
-    if MENU.defensive_state == Defensive::Shield {
+    if MENU.defensive_state != Defensive::Shield {
         return None;
     }
-    
+
     let prev_status = StatusModule::prev_status_kind(module_accessor, 0) as i32;
     let status = StatusModule::status_kind(module_accessor) as i32;
-    if should_perform_defensive_option(module_accessor, prev_status, status) {
-        return Some(true);
+    if !should_perform_defensive_option(module_accessor, prev_status, status) {
+        return None;
     }
 
-    None
+    Some(true)
 }
 
 pub unsafe fn get_command_flag_cat(
@@ -107,18 +109,18 @@ pub unsafe fn get_command_flag_cat(
     category: i32,
     flag: &mut i32,
 ) {
-    if !is_training_mode(){
-        return;
-    }
-    
-    if !is_operation_cpu(module_accessor){
+    if !is_training_mode() {
         return;
     }
 
-    if MENU.ledge_state == LedgeOption::None{
+    if !is_operation_cpu(module_accessor) {
         return;
     }
-    
+
+    if MENU.ledge_state == LedgeOption::None {
+        return;
+    }
+
     force_option(module_accessor);
     defensive_option(module_accessor, category, flag);
 }
