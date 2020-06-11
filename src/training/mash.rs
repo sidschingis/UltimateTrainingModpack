@@ -8,13 +8,11 @@ use smash::lib::lua_const::*;
 static mut BUFFERED_OPTION: Mash = Mash::None;
 static mut MASH_IN_NEUTRAL: bool = false;
 
-pub unsafe fn buffer_option(option: Mash)
-{
+pub unsafe fn buffer_option(option: Mash) {
     BUFFERED_OPTION = option;
 }
 
-pub unsafe fn set_neutral_mash(value: bool)
-{
+pub unsafe fn set_neutral_mash(value: bool) {
     MASH_IN_NEUTRAL = value;
 }
 
@@ -125,15 +123,15 @@ pub unsafe fn get_command_flag_cat(
         _ => (),
     }
 
-     // Grab + Dpad right -> stop mashing
-     if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CATCH)
-     && ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_R)
-     {
+    // Grab + Dpad right -> stop mashing
+    if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CATCH)
+        && ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_R)
+    {
         println!("[Training Modpack] Stop Mashing");
         buffer_option(Mash::None);
         set_neutral_mash(false);
         return;
-     }
+    }
 }
 
 unsafe fn get_random_command_list(

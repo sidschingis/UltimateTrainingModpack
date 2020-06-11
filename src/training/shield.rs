@@ -118,7 +118,11 @@ pub unsafe fn get_param_float(
     }
 
     if WAS_IN_SHIELDSTUN {
-        println!("[Training Modpack] exited shield stun {}, {}", frame_counter::get_frame_count(), MULTI_HIT_OFFSET);
+        println!(
+            "[Training Modpack] exited shield stun {}, {}",
+            frame_counter::get_frame_count(),
+            MULTI_HIT_OFFSET
+        );
         frame_counter::stop_counting();
         frame_counter::reset_frame_count();
     }

@@ -38,8 +38,16 @@ unsafe fn mod_handle_di(fighter: &mut L2CFighterCommon, _arg1: L2CValue) {
     }
 
     if DI_ANGLE != NO_DI {
-        WorkModule::set_float(module_accessor, DI_ANGLE.cos() as f32, *FIGHTER_STATUS_DAMAGE_WORK_FLOAT_VECOR_CORRECT_STICK_X);
-        WorkModule::set_float(module_accessor, DI_ANGLE.sin() as f32, *FIGHTER_STATUS_DAMAGE_WORK_FLOAT_VECOR_CORRECT_STICK_Y);
+        WorkModule::set_float(
+            module_accessor,
+            DI_ANGLE.cos() as f32,
+            *FIGHTER_STATUS_DAMAGE_WORK_FLOAT_VECOR_CORRECT_STICK_X,
+        );
+        WorkModule::set_float(
+            module_accessor,
+            DI_ANGLE.sin() as f32,
+            *FIGHTER_STATUS_DAMAGE_WORK_FLOAT_VECOR_CORRECT_STICK_Y,
+        );
     }
 
     // Either left, right, or none
