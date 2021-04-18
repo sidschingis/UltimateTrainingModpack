@@ -1,0 +1,89 @@
+@-moz-document url-prefix() {
+    @font-face {
+        font-family: '-webkit-standard';
+        src: url('nintendo_udsg-r_std_003.ttf');
+    }
+}
+
+body {
+    background: none;
+    width: 100%;
+}
+
+
+/* Overwrite keyword stuff. */
+
+.l-main-content {
+    padding: 0px 0px 0px;
+}
+
+.l-item{
+    margin: 0px 0px;
+}
+
+
+/* Somehow isn't getting passed through from default css. */
+
+.ret-icon-shadow {
+    position: absolute;
+    z-index: -1;
+    top: 3px;
+    left: 2px;
+    display: inline-block;
+    width: 58px;
+    height: 58px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+/** Grid Stuff**/
+
+
+.l-qa {
+    /* Column size */
+    flex-basis: 33%;
+}
+
+
+.l-item{
+    flex-grow: 1;
+    flex-basis: 25%;
+}
+
+ul.l-grid{
+    box-shadow: 3px 3px 3px rgb(24 24 24 / 75%);
+}
+
+
+.is-opened .question-outer {
+    /* Full width for opened lists */
+    width: 100vw;
+}
+
+
+/* Overwrite margin on the last child to avoid overlap*/
+
+.l-qa:last-child .qa {
+    margin-bottom: 0px;
+}
+
+.l-qa:last-child .qa.is-opened {
+    margin-bottom: 0px;
+}
+
+.keyword-button {
+    width: 100%;
+}
+
+.button-msg-wrapper{
+    /* 80px icon wrapper*/
+    width: calc(100% - 80px);
+    white-space: nowrap;
+}
+
+#ledge_delay .l-item, 
+#fast_fall_delay .l-item,
+#reaction_time .l-item,
+#oos_offset .l-item{
+    flex-basis: 15%;
+}
